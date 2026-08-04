@@ -1,6 +1,6 @@
 # JournalGym
 
-[![CI](https://github.com/VirgoAgario/journalgym-app/actions/workflows/ci.yml/badge.svg)](https://github.com/VirgoAgario/journalgym-app/actions/workflows/ci.yml)
+[![CI](https://github.com/KyleHafner/journalgym-app/actions/workflows/ci.yml/badge.svg)](https://github.com/KyleHafner/journalgym-app/actions/workflows/ci.yml)
 
 A self-hosted strength-training journal built for fast workout entry, useful progression analysis, and user-owned data.
 
@@ -61,7 +61,7 @@ The frontend is compiled in the first Docker build stage. The final Python image
 Requirements: Docker with Compose support.
 
 ```bash
-git clone https://github.com/VirgoAgario/journalgym-app.git
+git clone https://github.com/KyleHafner/journalgym-app.git
 cd journalgym-app
 cp .env.example .env
 mkdir -p data
