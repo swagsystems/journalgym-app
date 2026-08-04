@@ -1,0 +1,23 @@
+services:
+  journalgym:
+    build: .
+    image: journalgym:local
+    container_name: journalgym
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      FITNESS_DB_PATH: ${FITNESS_DB_PATH:-/data/fitness/fitness.db}
+      FRONTEND_DIST: ${FRONTEND_DIST:-/app/frontend/dist}
+      FITNESS_COOKIE_SECURE: ${FITNESS_COOKIE_SECURE:-false}
+      FITNESS_CORS_ALLOW_ORIGINS: ${FITNESS_CORS_ALLOW_ORIGINS:-}
+      UVICORN_FORWARDED_ALLOW_IPS: ${UVICORN_FORWARDED_ALLOW_IPS:-127.0.0.1}
+    ports:
+      - "${FITNESS_BIND:-127.0.0.1:8092}:8092"
+    volumes:
+      - ${FITNESS_CONFIG_DIR:-./data}:/data/fitness
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"

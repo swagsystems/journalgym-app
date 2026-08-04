@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Helios Fitness">
+  <rect width="512" height="512" rx="96" fill="#101722"/>
+  <circle cx="256" cy="256" r="156" fill="#14545a"/>
+  <path d="M126 239h48v-42h38v118h-38v-42h-48v-34Zm260 0h-48v-42h-38v118h38v-42h48v-34ZM225 224h62v64h-62v-64Z" fill="#e8eef7"/>
+  <path d="M209 188h94v32h-94v-32Zm0 104h94v32h-94v-32Z" fill="#8ff3e7"/>
+</svg>

@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+node_modules/
+frontend/dist/
+data/
+.env
+*.db-wal
+*.db-shm
+*.sqlite-wal
+*.sqlite-shm

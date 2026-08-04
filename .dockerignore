@@ -1,0 +1,14 @@
+.git
+frontend/node_modules
+frontend/dist
+__pycache__
+*.pyc
+.pytest_cache
+.venv
+*.db
+*.sqlite
+*.db-wal
+*.db-shm
+*.sqlite-wal
+*.sqlite-shm
+*.log
