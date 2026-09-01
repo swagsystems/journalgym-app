@@ -14,11 +14,11 @@
     "test:bulk": "node test-bulk-set-logic.mjs"
   },
   "dependencies": {
-    "@vitejs/plugin-react": "6.0.5",
-    "lucide-react": "^0.468.0",
+    "@vitejs/plugin-react": "6.1.1",
+    "lucide-react": "^0.577.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "recharts": "^2.15.0",
-    "vite": "8.2.0"
+    "vite": "8.2.2"
   }
 }
