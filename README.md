@@ -80,7 +80,7 @@ The default deployment binds only to loopback. If you publish it through HTTPS, 
 ```bash
 python -m venv .venv
 . .venv/bin/activate
-pip install --require-hashes -r requirements.lock
+pip install --require-hashes -r requirements.lock -r requirements.txt
 python -m unittest discover -s tests
 python -c "import api.main"
 uvicorn api.main:app --reload --port 8092
