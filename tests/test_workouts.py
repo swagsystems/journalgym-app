@@ -7,6 +7,15 @@ from datetime import date, timedelta
 from fastapi.testclient import TestClient
 
 
+
+def recent_week_start(min_weeks_back: int = 2) -> date:
+    """Monday of a recent week inside the dashboard window whose days share one month."""
+    today = date.today()
+    start = today - timedelta(days=today.weekday() + 7 * min_weeks_back)
+    while start.month != (start + timedelta(days=6)).month:
+        start -= timedelta(days=7)
+    return start
+
 class WorkoutApiTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
@@ -165,17 +174,18 @@ class WorkoutApiTests(unittest.TestCase):
         self.assertEqual(empty, [])
 
     def test_dashboard_includes_training_days(self):
+        workout_date = (recent_week_start() + timedelta(days=5)).isoformat()
         self.client.post(
             "/api/workouts",
             json={
-                "workout_date": "2026-05-16",
+                "workout_date": workout_date,
                 "sets": [{"exercise_id": self.exercise_id, "weight_lbs": 100, "reps": 5}],
             },
         )
 
         dashboard = self.client.get("/api/dashboard").json()
 
-        self.assertIn({"workout_date": "2026-05-16", "workouts": 1}, dashboard["training_days"])
+        self.assertIn({"workout_date": workout_date, "workouts": 1}, dashboard["training_days"])
         self.assertIn("current_streak_days", dashboard)
 
     def test_dashboard_includes_weekly_muscle_targets(self):
@@ -452,10 +462,13 @@ class WorkoutApiTests(unittest.TestCase):
         self.assertEqual(response.status_code, 422)
 
     def test_dashboard_uses_readable_week_labels(self):
+        week_start = recent_week_start()
+        week_end = week_start + timedelta(days=6)
+        label = f"{week_start.strftime('%b')} {week_start.day}-{week_end.day}"
         self.client.post(
             "/api/workouts",
             json={
-                "workout_date": "2026-05-15",
+                "workout_date": (week_start + timedelta(days=4)).isoformat(),
                 "title": "Week Label",
                 "sets": [{"exercise_id": self.exercise_id, "weight_lbs": 100, "reps": 5}],
             },
@@ -463,11 +476,11 @@ class WorkoutApiTests(unittest.TestCase):
 
         dashboard = self.client.get("/api/dashboard").json()
 
-        self.assertEqual(dashboard["weekly"][0]["week"], "2026-05-11")
-        self.assertEqual(dashboard["weekly"][0]["week_start"], "2026-05-11")
-        self.assertEqual(dashboard["weekly"][0]["week_end"], "2026-05-17")
-        self.assertEqual(dashboard["weekly"][0]["week_label"], "May 11-17")
-        self.assertEqual(dashboard["volume_by_muscle"][0]["week_label"], "May 11-17")
+        self.assertEqual(dashboard["weekly"][0]["week"], week_start.isoformat())
+        self.assertEqual(dashboard["weekly"][0]["week_start"], week_start.isoformat())
+        self.assertEqual(dashboard["weekly"][0]["week_end"], week_end.isoformat())
+        self.assertEqual(dashboard["weekly"][0]["week_label"], label)
+        self.assertEqual(dashboard["volume_by_muscle"][0]["week_label"], label)
 
     def test_dashboard_muscle_volume_includes_role_buckets(self):
         exercise = self.client.post(
@@ -481,10 +494,11 @@ class WorkoutApiTests(unittest.TestCase):
                 "notes": "",
             },
         ).json()
+        week_start = recent_week_start()
         self.client.post(
             "/api/workouts",
             json={
-                "workout_date": "2026-05-15",
+                "workout_date": (week_start + timedelta(days=4)).isoformat(),
                 "title": "Role Buckets",
                 "sets": [{"exercise_id": exercise["id"], "weight_lbs": 100, "reps": 5}],
             },
@@ -494,7 +508,7 @@ class WorkoutApiTests(unittest.TestCase):
         rows = {
             (row["muscle"], row["role"]): row
             for row in dashboard["volume_by_muscle"]
-            if row["week"] == "2026-05-11"
+            if row["week"] == week_start.isoformat()
         }
 
         self.assertEqual(rows[("Chest", "primary")]["volume_lbs"], 500)
