@@ -13,7 +13,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     UVICORN_FORWARDED_ALLOW_IPS=127.0.0.1
 WORKDIR /app
 COPY requirements.txt requirements.lock ./
-RUN pip install --no-cache-dir --require-hashes -r requirements.lock
+RUN pip install --no-cache-dir --require-hashes -r requirements.lock -r requirements.txt
 COPY api ./api
 COPY --from=frontend /app/frontend/dist ./frontend/dist
 RUN useradd --system --create-home --uid 10001 appuser \
